@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 // @get, @post, @put, @delete
 
-export const get = (route: string) => {
+export const get = <T>(route: string) => {
   return function (
-    thisObject: any,
+    thisObject: T,
     thisMethodName: string,
     desc: PropertyDescriptor
   ) {
