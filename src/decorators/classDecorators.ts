@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 import { myRouter } from '../myRouter';
 
-const router = myRouter.getRouter;
+// const router = myRouter.getRouter
 
-const classController = (routePrefix: string) => {
+export const classController = (routePrefix: string) => {
   return (thisObject: Function) => {
+    const router = myRouter.getMyRouter;
+
     for (let key in thisObject.prototype) {
       const method = thisObject.prototype[key];
 
@@ -17,4 +19,4 @@ const classController = (routePrefix: string) => {
   };
 };
 
-export { classController, router };
+// export { classController };
