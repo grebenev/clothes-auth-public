@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { get } from '../decorators/routesDecorators';
 import { classController } from '../decorators/classDecorators';
 
-@classController('')
+@classController('/api/users')
 class LoginController {
-  @get<LoginController>('/api/users/currentuser')
+  @get<LoginController>('/currentuser')
   getCurrentUser(req: Request, res: Response): void {
-    res.json('Hi there form Konstantin2!');
+    res.json('Hi there currentuser!');
   }
 
   // @post('/api/users/signin')
