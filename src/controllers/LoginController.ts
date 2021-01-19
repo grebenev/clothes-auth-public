@@ -1,16 +1,18 @@
 import { Request, Response } from 'express';
-import { get } from '../decorators/routesDecorators';
+import { get, post } from '../decorators/routesDecorators';
 import { classController } from '../decorators/classDecorators';
 
 @classController('/api/users')
 class LoginController {
   @get<LoginController>('/currentuser')
   getCurrentUser(req: Request, res: Response): void {
-    res.json('Hi there currentuser!');
+    res.json('Hi there currentuser!!');
   }
 
-  // @post('/api/users/signin')
-  signinUser(req: Request, res: Response): void {}
+  @post('/signin')
+  signinUser(req: Request, res: Response): void {
+    res.json('Post request to signinUser is worked ');
+  }
 
   // @post('/api/users/signout')
   signoutUser(req: Request, res: Response): void {}
