@@ -29,8 +29,9 @@ class LoginController {
   signupUser(req: Request, res: Response): void {
     const errors = validationResult(req);
 
-    if (errors) {
-      res.status(400).send(errors.array());
+    if (!errors.isEmpty()) {
+      // res.status(400).send(errors.array());
+      throw new Error('invalid email');
       return;
     }
 
