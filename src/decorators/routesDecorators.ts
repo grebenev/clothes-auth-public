@@ -11,10 +11,26 @@ const setMethod = (method: string): Function => {
   };
 };
 
-export const get = setMethod('get');
-export const post = setMethod('post');
-export const put = setMethod('put');
-export const del = setMethod('delete');
-
 // @use
-export const use = (middleware: RequestHandler) => {};
+const use = (middleware: RequestHandler): Function => {
+  return function (thisObject: any, thisMethodName: string) {
+    let middlewares: Function[] =
+      Reflect.getMetadata('middleware', thisObject) || [];
+    middlewares = [...middlewares, middleware];
+
+    Reflect.defineMetadata(
+      'middleware',
+      middlewares,
+      thisObject,
+      thisMethodName
+    );
+  };
+};
+
+export const decorator = {
+  get: setMethod('get'),
+  post: setMethod('post'),
+  put: setMethod('put'),
+  delete: setMethod('delete'),
+  use,
+};

@@ -1,10 +1,11 @@
 import 'reflect-metadata';
 import { myRouter } from '../myRouter';
 
-// const router = myRouter.getRouter
 enum Methods {
   post = 'post',
   get = 'get',
+  put = 'put',
+  delete = 'delete',
 }
 
 export const classController = (routePrefix: string) => {
@@ -21,11 +22,12 @@ export const classController = (routePrefix: string) => {
         key
       );
 
+      const middlewares =
+        Reflect.getMetadata('middleware', thisObject.prototype, key) || [];
+
       if (route) {
-        router[metaMethod](`${routePrefix}${route}`, method);
+        router[metaMethod](`${routePrefix}${route}`, ...middlewares, method);
       }
     }
   };
 };
-
-// export { classController };
