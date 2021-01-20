@@ -4,14 +4,14 @@ import { classController } from '../decorators/classDecorators';
 
 @classController('/api/users')
 class LoginController {
-  @get<LoginController>('/currentuser')
+  @get('/currentuser')
   getCurrentUser(req: Request, res: Response): void {
     res.json('Hi there currentuser!!');
   }
 
   @post('/signin')
   signinUser(req: Request, res: Response): void {
-    res.json('Post request to signinUser is worked ');
+    res.json('Post request to signinUser is worked !');
   }
 
   // @post('/api/users/signout')
