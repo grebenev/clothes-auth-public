@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { RequestHandler } from 'express';
+import { ValidationChain } from 'express-validator';
 
 // @get, @post, @put, @delete
 const setMethod = (method: string): Function => {
@@ -12,10 +13,9 @@ const setMethod = (method: string): Function => {
 };
 
 // @use
-const use = (middleware: RequestHandler): Function => {
+const use = (middleware: RequestHandler | ValidationChain[]): Function => {
   return function (thisObject: any, thisMethodName: string) {
-    let middlewares: Function[] =
-      Reflect.getMetadata('middleware', thisObject) || [];
+    let middlewares = Reflect.getMetadata('middleware', thisObject) || [];
     middlewares = [...middlewares, middleware];
 
     Reflect.defineMetadata(
