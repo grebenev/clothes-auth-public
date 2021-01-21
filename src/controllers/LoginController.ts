@@ -27,12 +27,10 @@ class LoginController {
       .isLength({ min: 4, max: 20 })
       .withMessage('Password must be between 4-20 chr'),
   ])
-  // @error()
-  signupUser(req: Request, res: Response): void {
+  async signupUser(req: Request, res: Response) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      // res.status(400).send(errors.array());
       throw new ValidatorErrors(errors.array());
     }
 
