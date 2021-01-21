@@ -15,6 +15,3 @@ export const errorHandler = (
     errors: [{ message: 'Somthing went wrong' }],
   });
 };
-
-// 5 Auth-4 Error Handler (стр 13)
-// Можно ли использовать декораторы для ошибок?

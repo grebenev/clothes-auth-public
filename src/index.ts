@@ -3,10 +3,15 @@ import { json } from 'body-parser';
 import './controllers/LoginController';
 import { myRouter } from './myRouter';
 import { errorHandler } from './middleware/errorHandler';
+import { NotFoundError } from './errors';
 
 const app = express();
 app.use(json());
 app.use(myRouter.getMyRouter);
+
+app.all('*', () => {
+  throw new NotFoundError();
+});
 
 app.use(errorHandler);
 
