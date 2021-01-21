@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { decorator } from '../decorators/routesDecorators';
 import { classController } from '../decorators/classDecorators';
 import { body, validationResult } from 'express-validator';
+import { User } from '../models/userModel';
 import { ValidatorErrors } from '../errors';
 
 @classController('/api/users')
@@ -35,6 +36,19 @@ class LoginController {
     }
 
     const { email, password } = req.body;
-    res.send({});
+
+    // find user email
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      console.log('Email in use');
+      return res.send({});
+    }
+
+    // save user to mongo
+    const user = User.build({ email, password });
+    await user.save();
+
+    res.status(201).send(user);
   }
 }
