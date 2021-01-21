@@ -6,9 +6,11 @@ import { myRouter } from './myRouter';
 import { errorHandler } from './middleware/errorHandler';
 import { NotFoundError } from './errors';
 import { connect } from 'mongoose';
+import cookieSession from 'cookie-session';
 
 const app = express();
 app.use(json());
+// app.use(cookieSession({}));
 app.use(myRouter.getMyRouter);
 
 app.all('*', () => {
