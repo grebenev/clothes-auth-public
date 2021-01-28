@@ -9,8 +9,15 @@ import { connect } from 'mongoose';
 import cookieSession from 'cookie-session';
 
 const app = express();
+app.set('trust proxy', true);
+
 app.use(json());
-// app.use(cookieSession({}));
+app.use(
+  cookieSession({
+    secure: true,
+    signed: false,
+  })
+);
 app.use(myRouter.getMyRouter);
 
 app.all('*', () => {

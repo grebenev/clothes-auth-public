@@ -38,16 +38,28 @@ const comparePasswords = async (
   return buffer.toString('hex') === hashedPassword;
 };
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    toJSON: {
+      versionKey: false,
+      transform: (...args) => {
+        delete args[1].password;
+        args[1].id = args[1]._id;
+        delete args[1]._id;
+      },
+    },
+  }
+);
 
 userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {

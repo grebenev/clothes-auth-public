@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
+import { body, validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+
 import { decorator } from '../decorators/routesDecorators';
 import { classController } from '../decorators/classDecorators';
-import { body, validationResult } from 'express-validator';
 import { User } from '../models/userModel';
 import { ValidatorErrors } from '../errors';
 
@@ -48,6 +50,22 @@ class LoginController {
     // save user to mongo
     const user = User.build({ email, password });
     await user.save();
+
+    // create JsonWebToken
+    if (process.env.JWT_KEY) {
+      const userJwt = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        process.env.JWT_KEY
+      );
+
+      // save JsonWebToken in session object
+      req.session = {
+        jwt: userJwt,
+      };
+    }
 
     res.status(201).send(user);
   }
