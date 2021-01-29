@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
@@ -15,7 +15,20 @@ class LoginController {
   }
 
   @decorator.post('/signin')
+  @decorator.use([
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
+      .trim()
+      .notEmpty()
+      .withMessage('Password is required'),
+  ])
   signinUser(req: Request, res: Response): void {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      throw new ValidatorErrors(errors.array());
+    }
+
     res.json('Post request to signinUser is worked !');
   }
 
@@ -30,6 +43,7 @@ class LoginController {
       .isLength({ min: 4, max: 20 })
       .withMessage('Password must be between 4-20 chr'),
   ])
+
   async signupUser(req: Request, res: Response) {
     const errors = validationResult(req);
 
