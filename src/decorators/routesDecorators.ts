@@ -15,12 +15,12 @@ const setMethod = (method: string): Function => {
 // @use
 const use = (middleware: RequestHandler | ValidationChain[]): Function => {
   return function (thisObject: any, thisMethodName: string) {
-    let middlewares = Reflect.getMetadata('middleware', thisObject) || [];
-    middlewares = [...middlewares, middleware];
+    const middlewares =
+      Reflect.getMetadata('middleware', thisObject, thisMethodName) || [];
 
     Reflect.defineMetadata(
       'middleware',
-      middlewares,
+      [...middlewares, middleware].reverse(),
       thisObject,
       thisMethodName
     );
