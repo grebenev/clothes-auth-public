@@ -1,12 +1,12 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
-import './controllers/LoginController';
-import { myRouter } from './myRouter';
-import { errorHandler } from './errors/errorHandler';
-import { NotFoundError } from './errors';
 import { connect } from 'mongoose';
 import cookieSession from 'cookie-session';
+
+import './controllers/LoginController';
+import { myRouter } from './myRouter';
+import { NotFoundError, errorHandler } from './errors';
 
 const app = express();
 app.set('trust proxy', true);
