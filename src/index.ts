@@ -3,7 +3,7 @@ import 'express-async-errors';
 import { json } from 'body-parser';
 import './controllers/LoginController';
 import { myRouter } from './myRouter';
-import { errorHandler } from './middleware/errorHandler';
+import { errorHandler } from './errors/errorHandler';
 import { NotFoundError } from './errors';
 import { connect } from 'mongoose';
 import cookieSession from 'cookie-session';

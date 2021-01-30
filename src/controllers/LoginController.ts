@@ -1,21 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { decorator } from '../decorators/routesDecorators';
 import { classController } from '../decorators/classDecorators';
 import { User } from '../models/userModel';
-import { ValidatorErrors } from '../errors';
-
-const requestValidation = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    throw new ValidatorErrors(errors.array());
-  }
-
-  next();
-};
+import { signinChain, signupChain } from '../validation/validationChain';
+import { requestValidation } from '../validation/validationMiddleware';
 
 @classController('/api/users')
 class LoginController {
@@ -25,10 +15,7 @@ class LoginController {
   }
 
   @decorator.post('/signin')
-  @decorator.use([
-    body('email').isEmail().withMessage('Email must be valid'),
-    body('password').trim().notEmpty().withMessage('Password is required'),
-  ])
+  @decorator.use(signinChain)
   @decorator.use(requestValidation)
   signinUser(req: Request, res: Response): void {
     res.json('Post request to signinUser is worked !');
@@ -38,13 +25,7 @@ class LoginController {
   signoutUser(req: Request, res: Response): void {}
 
   @decorator.post('/signup')
-  @decorator.use([
-    body('email').isEmail().withMessage('Email must be valid'),
-    body('password')
-      .trim()
-      .isLength({ min: 4, max: 20 })
-      .withMessage('Password must be between 4-20 chr'),
-  ])
+  @decorator.use(signupChain)
   @decorator.use(requestValidation)
   async signupUser(req: Request, res: Response) {
     const { email, password } = req.body;
