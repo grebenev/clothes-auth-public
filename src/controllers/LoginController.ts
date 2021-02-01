@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { decorator } from '../decorators/routesDecorators';
-import { classController } from '../decorators/classDecorators';
+import { decorator, classController } from '../decorators';
 import { User } from '../models/userModel';
-import { signinChain, signupChain } from '../validation/validationChain';
-import { requestValidation } from '../validation/validationMiddleware';
+import {
+  signinChain,
+  signupChain,
+  requestValidation,
+  comparePasswords,
+} from '../validation';
+import { BadRequestError } from '../errors';
 
 @classController('/api/users')
 class LoginController {
@@ -17,8 +21,23 @@ class LoginController {
   @decorator.post('/signin')
   @decorator.use(signinChain)
   @decorator.use(requestValidation)
-  signinUser(req: Request, res: Response): void {
-    res.json('Post request to signinUser is worked !');
+  async signinUser(req: Request, res: Response): Promise<void> {
+    const { email, password } = req.body;
+
+    // find user email in mongo
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      throw new BadRequestError('email not found');
+    }
+    const passwordMatch = await comparePasswords(
+      existingUser.password,
+      password
+    );
+
+    if (!passwordMatch) {
+      throw new BadRequestError('Password incorrect');
+    }
   }
 
   // @post('/api/users/signout')
