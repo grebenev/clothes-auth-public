@@ -18,6 +18,23 @@ class LoginController {
     res.json('Hi there currentuser!!');
   }
 
+  static setToken(req: Request, user: any) {
+    if (process.env.JWT_KEY) {
+      const userJwt = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        process.env.JWT_KEY
+      );
+
+      // save JsonWebToken in session object
+      req.session = {
+        jwt: userJwt,
+      };
+    }
+  }
+
   @decorator.post('/signin')
   @decorator.use(signinChain)
   @decorator.use(requestValidation)
@@ -30,6 +47,8 @@ class LoginController {
     if (!existingUser) {
       throw new BadRequestError('email not found');
     }
+
+    // compare passwords
     const passwordMatch = await comparePasswords(
       existingUser.password,
       password
@@ -38,6 +57,11 @@ class LoginController {
     if (!passwordMatch) {
       throw new BadRequestError('Password incorrect');
     }
+
+    // set JWT for signin user
+    LoginController.setToken(req, existingUser);
+
+    res.status(201).send(existingUser);
   }
 
   // @post('/api/users/signout')
@@ -61,21 +85,8 @@ class LoginController {
     const user = User.build({ email, password });
     await user.save();
 
-    // create JsonWebToken
-    if (process.env.JWT_KEY) {
-      const userJwt = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-        },
-        process.env.JWT_KEY
-      );
-
-      // save JsonWebToken in session object
-      req.session = {
-        jwt: userJwt,
-      };
-    }
+    // set JWT for signup user
+    LoginController.setToken(req, user);
 
     res.status(201).send(user);
   }
