@@ -10,7 +10,6 @@ import {
   comparePasswords,
 } from '../validation';
 import { BadRequestError } from '../errors';
-import { readBuilderProgram } from 'typescript';
 
 @classController('/api/users')
 class LoginController {
@@ -33,18 +32,16 @@ class LoginController {
 
   @decorator.get('/currentuser')
   currentUser(req: Request, res: Response) {
-    // res.json('Hi there currentuser!!');
     if (!req.session?.jwt) {
       return res.send({ currentUser: null });
     }
 
-    const currentUser = jwt.verify(req.session.jwt, process.env.JWT_KEY!);
-
-    if (!currentUser) {
-      return res.send({ currentUser: null });
+    try {
+      const currentUser = jwt.verify(req.session.jwt, process.env.JWT_KEY!);
+      res.send({ currentUser });
+    } catch (err) {
+      res.send({ currentUser: null });
     }
-
-    res.send({ currentUser });
   }
 
   @decorator.post('/signin')
@@ -76,7 +73,7 @@ class LoginController {
     res.status(201).send(existingUser);
   }
 
-  // @post('/api/users/signout')
+  @decorator.post('/signout')
   signoutUser(req: Request, res: Response): void {}
 
   @decorator.post('/signup')
