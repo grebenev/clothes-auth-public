@@ -10,14 +10,10 @@ import {
   comparePasswords,
 } from '../validation';
 import { BadRequestError } from '../errors';
+import { readBuilderProgram } from 'typescript';
 
 @classController('/api/users')
 class LoginController {
-  @decorator.get('/currentuser')
-  getCurrentUser(req: Request, res: Response): void {
-    res.json('Hi there currentuser!!');
-  }
-
   static setToken(req: Request, user: any) {
     if (process.env.JWT_KEY) {
       const userJwt = jwt.sign(
@@ -33,6 +29,22 @@ class LoginController {
         jwt: userJwt,
       };
     }
+  }
+
+  @decorator.get('/currentuser')
+  currentUser(req: Request, res: Response) {
+    // res.json('Hi there currentuser!!');
+    if (!req.session?.jwt) {
+      return res.send({ currentUser: null });
+    }
+
+    const currentUser = jwt.verify(req.session.jwt, process.env.JWT_KEY!);
+
+    if (!currentUser) {
+      return res.send({ currentUser: null });
+    }
+
+    res.send({ currentUser });
   }
 
   @decorator.post('/signin')
