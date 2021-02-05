@@ -74,7 +74,11 @@ class LoginController {
   }
 
   @decorator.post('/signout')
-  signoutUser(req: Request, res: Response): void {}
+  signoutUser(req: Request, res: Response): void {
+    req.session = null;
+
+    res.send({});
+  }
 
   @decorator.post('/signup')
   @decorator.use(signupChain)
