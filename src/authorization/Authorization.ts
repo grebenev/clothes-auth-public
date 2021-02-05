@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+import { NotAuthError } from '../errors/NotAuthError';
+
 interface CurrentUser {
   id: string;
   email: string;
@@ -15,25 +17,50 @@ declare global {
 }
 
 export class Authorization {
-  static getCurrentUser = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.session?.jwt) {
-      next();
-    } else {
-      try {
-        const currentUser = jwt.verify(
-          req.session.jwt,
-          process.env.JWT_KEY!
-        ) as CurrentUser;
-        req.currentUser = currentUser;
-      } catch (err) {}
+  static check = {
+    currentUser(req: Request, res: Response, next: NextFunction) {
+      if (!req.session?.jwt) {
+        next();
+      } else {
+        try {
+          const currentUser = jwt.verify(
+            req.session.jwt,
+            process.env.JWT_KEY!
+          ) as CurrentUser;
+          req.currentUser = currentUser;
+        } catch (err) {}
+
+        next();
+      }
+    },
+    auth(req: Request, res: Response, next: NextFunction) {
+      if (!req.currentUser) {
+        throw new NotAuthError();
+      }
 
       next();
-    }
+    },
   };
+
+  // static getCurrentUser = (req: Request, res: Response, next: NextFunction) => {
+  //   if (!req.session?.jwt) {
+  //     next();
+  //   } else {
+  //     try {
+  //       const currentUser = jwt.verify(
+  //         req.session.jwt,
+  //         process.env.JWT_KEY!
+  //       ) as CurrentUser;
+  //       req.currentUser = currentUser;
+  //     } catch (err) {}
+
+  //     next();
+  //   }
+  // };
 
   static checkAuth = (req: Request, res: Response, next: NextFunction) => {
     if (!req.currentUser) {
-      return res.status(401).send({ message: 'Not authoize' });
+      throw new NotAuthError();
     }
 
     next();

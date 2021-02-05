@@ -10,10 +10,6 @@ import {
   comparePasswords,
 } from '../validation';
 import { BadRequestError } from '../errors';
-
-// import { currentuser } from '../middlewares/currentUser';
-// import { requireAuth } from '../middlewares/requireAuth';
-
 import { Authorization } from '../authorization/Authorization';
 
 @classController('/api/users')
@@ -36,8 +32,8 @@ class LoginController {
   }
 
   @decorator.get('/currentuser')
-  @decorator.use(Authorization.getCurrentUser)
-  @decorator.use(Authorization.checkAuth)
+  @decorator.use(Authorization.check.currentUser)
+  @decorator.use(Authorization.check.auth)
   currentUser(req: Request, res: Response) {
     res.send({ currentUser: req.currentUser || null });
   }
