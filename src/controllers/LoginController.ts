@@ -11,6 +11,11 @@ import {
 } from '../validation';
 import { BadRequestError } from '../errors';
 
+// import { currentuser } from '../middlewares/currentUser';
+// import { requireAuth } from '../middlewares/requireAuth';
+
+import { Authorization } from '../authorization/Authorization';
+
 @classController('/api/users')
 class LoginController {
   static setToken(req: Request, user: any) {
@@ -31,17 +36,10 @@ class LoginController {
   }
 
   @decorator.get('/currentuser')
+  @decorator.use(Authorization.getCurrentUser)
+  @decorator.use(Authorization.checkAuth)
   currentUser(req: Request, res: Response) {
-    if (!req.session?.jwt) {
-      return res.send({ currentUser: null });
-    }
-
-    try {
-      const currentUser = jwt.verify(req.session.jwt, process.env.JWT_KEY!);
-      res.send({ currentUser });
-    } catch (err) {
-      res.send({ currentUser: null });
-    }
+    res.send({ currentUser: req.currentUser || null });
   }
 
   @decorator.post('/signin')
