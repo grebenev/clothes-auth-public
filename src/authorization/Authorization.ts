@@ -41,28 +41,4 @@ export class Authorization {
       next();
     },
   };
-
-  // static getCurrentUser = (req: Request, res: Response, next: NextFunction) => {
-  //   if (!req.session?.jwt) {
-  //     next();
-  //   } else {
-  //     try {
-  //       const currentUser = jwt.verify(
-  //         req.session.jwt,
-  //         process.env.JWT_KEY!
-  //       ) as CurrentUser;
-  //       req.currentUser = currentUser;
-  //     } catch (err) {}
-
-  //     next();
-  //   }
-  // };
-
-  static checkAuth = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.currentUser) {
-      throw new NotAuthError();
-    }
-
-    next();
-  };
 }
