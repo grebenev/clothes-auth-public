@@ -64,7 +64,7 @@ class LoginController {
     // set JWT for signin user
     LoginController.setToken(req, existingUser);
 
-    res.status(201).send(existingUser);
+    res.status(200).send(existingUser);
   }
 
   @decorator.post('/signout')
@@ -84,8 +84,8 @@ class LoginController {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      console.log('Email in use');
-      return res.send({});
+      // console.log('Email in use');
+      return res.status(400).send({});
     }
 
     // save user to mongo
