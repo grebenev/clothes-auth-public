@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { NotAuthError } from '../errors/NotAuthError';
+// import { NotAuthError } from '../errors/NotAuthError';
 
 interface CurrentUser {
   id: string;
@@ -35,7 +35,7 @@ export class Authorization {
     },
     auth(req: Request, res: Response, next: NextFunction) {
       if (!req.currentUser) {
-        throw new NotAuthError();
+        // throw new NotAuthError();
       }
 
       next();
