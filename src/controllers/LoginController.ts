@@ -10,7 +10,7 @@ import {
   comparePasswords,
 } from '../validation';
 import { BadRequestError } from '../errors';
-import { Authorization } from '../authorization/Authorization';
+import { Authorization } from '../middlewares/Authorization';
 
 @classController('/api/users')
 class LoginController {
@@ -84,7 +84,6 @@ class LoginController {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      // console.log('Email in use');
       return res.status(400).send({});
     }
 

@@ -1,3 +1,3 @@
 export * from './validationChain';
-export * from './validationMiddleware';
+export * from '../middlewares/requestValidation';
 export * from './validationPassword';
