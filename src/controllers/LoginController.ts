@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { requestValidation, BadRequestError, Authorization } from '@grebenev.com/common'
-
-import { decorator, classController } from '../decorators';
-import { User } from '../models/userModel';
 import {
-  signinChain,
-  signupChain,  
-  comparePasswords,
-} from '../validation';
+  requestValidation,
+  BadRequestError,
+  Authorization,
+  decorator,
+  classController,
+} from '@grebenev.com/common';
+
+// import { decorator, classController } from '../decorators';
+import { User } from '../models/userModel';
+import { signinChain, signupChain, comparePasswords } from '../validation';
 
 @classController('/api/users')
 class LoginController {

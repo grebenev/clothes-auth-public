@@ -4,8 +4,7 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 
 import './controllers/LoginController';
-import { myRouter } from './myRouter';
-import { NotFoundError, errorHandler } from '@grebenev.com/common';
+import { NotFoundError, errorHandler, myRouter } from '@grebenev.com/common';
 
 const app = express();
 app.set('trust proxy', true);
