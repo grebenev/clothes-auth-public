@@ -32,8 +32,8 @@ class LoginController {
   }
 
   @decorator.get('/currentuser')
-  @decorator.use(Authorization.check.currentUser)
-  @decorator.use(Authorization.check.auth)
+  @decorator.use(Authorization.currentUser)
+  @decorator.use(Authorization.requireAuth)
   currentUser(req: Request, res: Response) {
     res.send({ currentUser: req.currentUser || null });
   }
