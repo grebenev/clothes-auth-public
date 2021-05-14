@@ -8,7 +8,6 @@ import {
   classController,
 } from '@grebenev.com/common';
 
-// import { decorator, classController } from '../decorators';
 import { User } from '../models/userModel';
 import { signinChain, signupChain, comparePasswords } from '../validation';
 
@@ -33,7 +32,6 @@ class LoginController {
 
   @decorator.get('/currentuser')
   @decorator.use(Authorization.currentUser)
-  @decorator.use(Authorization.requireAuth)
   currentUser(req: Request, res: Response) {
     res.send({ currentUser: req.currentUser || null });
   }
