@@ -39,7 +39,7 @@ class LoginController {
   @decorator.post('/signin')
   @decorator.use(signinChain)
   @decorator.use(requestValidation)
-  async signinUser(req: Request, res: Response): Promise<void> {
+  async signinUser(req: Request, res: Response) {
     const { email, password } = req.body;
 
     // find user email in mongo
