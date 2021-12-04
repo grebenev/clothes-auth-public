@@ -7,12 +7,13 @@ async function start() {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY not defined');
   }
+
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI not defined');
+  }
+
   try {
-    await connect('mongodb://auth-mongo-srv:27017/auth', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
+    await connect(process.env.MONGO_URI);
     console.log('Connected to Mongo Db');
   } catch (error) {
     console.error(error);

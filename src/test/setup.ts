@@ -6,13 +6,10 @@ let mongo: any;
 beforeAll(async () => {
   process.env.JWT_KEY = '2wfs';
 
-  mongo = new MongoMemoryServer();
+  mongo = await MongoMemoryServer.create();
   const mongoUri = await mongo.getUri();
 
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(mongoUri);
 });
 
 beforeEach(async () => {
