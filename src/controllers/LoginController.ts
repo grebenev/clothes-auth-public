@@ -6,7 +6,7 @@ import {
   Authorization,
   decorator,
   classController,
-} from '@grebenev.com/common';
+} from '@grebenev.com/common2';
 
 import { User } from '../models/userModel';
 import { signinChain, signupChain, comparePasswords } from '../validation';
